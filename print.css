@@ -1,0 +1,423 @@
+/* ==========================================================
+   UBS Rio Grande — Print Stylesheet
+   Escopo: exclusivamente @media print + @page
+   NÃO modifica layout de tela (zero side-effects)
+   ========================================================== */
+
+/* ── Página A4 ─────────────────────────────────────────── */
+@page {
+  size: A4 portrait;
+  margin: 0;            /* folha-print cuida das margens internas */
+}
+@page landscape {
+  size: A4 landscape;
+  margin: 0;
+}
+
+/* ── Reset de impressão ─────────────────────────────────── */
+@media print {
+
+  /* Ocultar toda a UI de tela, exibir só a folha */
+  body > *:not(#print-root) { display: none !important; }
+  #print-root               { display: block !important; }
+
+  /* Garantir reprodução fiel de cores e fundos */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust:         exact !important;
+    color-adjust:               exact !important;
+  }
+
+  /* ── Folha A4 retrato ──────────────────────────────────── */
+  .folha-print {
+    width:            210mm;
+    height:           297mm;
+    display:          flex;
+    flex-direction:   column;
+    padding:          13mm 18mm 0 18mm;
+    background:       #fff;
+    overflow:         hidden;
+    box-sizing:       border-box;
+    /* Sem quebra de página dentro da folha */
+    break-inside:        avoid;
+    page-break-inside:   avoid;
+  }
+
+  /* Folha paisagem (2 vias) */
+  .folha-print.paisagem {
+    width:    297mm;
+    height:   210mm;
+    padding:  10mm 13mm 0 13mm;
+  }
+
+  /* ── Conteúdo e rodapé ─────────────────────────────────── */
+  .folha-conteudo {
+    flex: 1;
+    overflow: hidden;
+  }
+  .folha-rodape {
+    flex-shrink: 0;
+  }
+
+  /* ── Cabeçalho institucional ───────────────────────────── */
+  .p-dh {
+    display:          flex;
+    align-items:      center;
+    gap:              11px;
+    padding-bottom:   9px;
+    margin-bottom:    14px;          /* ← espaçamento hierárquico */
+    border-bottom:    3px solid #1a3a5c;
+    break-inside:     avoid;
+    page-break-inside: avoid;
+  }
+  .p-logo {
+    width:        62px;
+    height:       62px;
+    flex-shrink:  0;
+    object-fit:   contain;
+  }
+  .p-dn {
+    font-size:    10px;
+    font-weight:  700;               /* títulos: 600–700 */
+    color:        #1a3a5c;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    line-height:  1.4;
+  }
+  .p-ds {
+    font-size:  8.5px;
+    font-weight: 400;                /* conteúdo: 400 */
+    color:      #64748b;
+    margin-top: 2px;
+    line-height: 1.5;
+  }
+  .p-cab-data {
+    font-size:   8.5px;
+    font-weight: 600;
+    color:       #64748b;
+    align-self:  flex-end;
+  }
+
+  /* ── Linha do paciente ─────────────────────────────────── */
+  .p-pac-row {
+    display:       flex;
+    align-items:   baseline;
+    gap:           7px;
+    flex-wrap:     wrap;
+    border-bottom: 1.5px solid #1a3a5c;
+    padding-bottom: 6px;
+    margin-bottom:  20px;            /* ← nome paciente → 16–24 px */
+    break-inside:   avoid;
+    page-break-inside: avoid;
+  }
+  .p-pac-lbl {
+    font-size:      8px;
+    font-weight:    700;
+    color:          #64748b;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    flex-shrink:    0;
+  }
+  .p-pac-nome {
+    font-size:   15px;
+    font-weight: 700;                /* destaque máximo para o nome */
+    color:       #000;               /* preto puro para impressão */
+    flex:        1;
+  }
+  .p-pac-meta {
+    font-size:   9px;
+    font-weight: 400;
+    color:       #555;
+    white-space: nowrap;
+  }
+
+  /* ── Título do documento ──────────────────────────────── */
+  .p-titulo {
+    text-align:     center;
+    font-weight:    700;
+    text-transform: uppercase;
+    background:     linear-gradient(90deg, #1a3a5c, #1e5080);
+    color:          #fff;
+    padding:        9px 14px;
+    font-size:      12px;
+    margin-bottom:  18px;            /* ← título → 12–20 px */
+    border-radius:  5px;
+    letter-spacing: .08em;
+    line-height:    1.4;
+    break-inside:     avoid;
+    page-break-inside: avoid;
+  }
+
+  /* ── Grid de exames (2 colunas) ───────────────────────── */
+  .p-grid2 {
+    display:        grid;
+    grid-template-columns: 1fr 1fr;
+    border:         1px solid #e2e8f0;
+    border-radius:  5px;
+    overflow:       hidden;
+    margin-bottom:  18px;            /* ← seção exames → 12–20 px */
+    break-inside:     avoid;
+    page-break-inside: avoid;
+  }
+  .p-grid2-col {
+    border-right: 1px solid #e2e8f0;
+  }
+  .p-grid2-col:last-child { border-right: none; }
+
+  /* Linha de exame */
+  .p-ex-row {
+    display:       flex;
+    align-items:   flex-start;
+    gap:           7px;
+    padding:       6px 9px;          /* padding interno: 8–12 px */
+    border-bottom: .5px solid #f1f5f9;
+    font-size:     9.5px;
+    font-weight:   400;
+    line-height:   1.5;              /* line-height: 1.4–1.6 */
+    color:         #1e293b;
+  }
+  .p-ex-row:last-child { border-bottom: none; }
+
+  /* ── Cabeçalho de categoria (.p-cat-hd) ───────────────── */
+  .p-cat-hd {
+    font-size:    8.5px;
+    font-weight:  700;
+    color:        #fff;
+    background:   linear-gradient(90deg, #1a3a5c, #1e5080);
+    border-radius: 4px;
+    padding:      3px 9px;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    margin:       10px 0 3px;
+    break-inside:   avoid;
+    page-break-inside: avoid;
+    break-after:  avoid;
+    page-break-after: avoid;
+  }
+
+  /* ── Indicação clínica / Dados clínicos ───────────────── */
+  .p-indicbox,
+  .p-dados {
+    margin-top:    16px;             /* ← dados clínicos → 12–20 px */
+    margin-bottom: 14px;
+    break-inside:   avoid;
+    page-break-inside: avoid;
+  }
+  .p-indicboxhd,
+  .p-dadoslbl {
+    font-size:    7.5px;
+    font-weight:  700;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    line-height:  1.4;
+  }
+  .p-indicbody,
+  .p-dados > :not(.p-dadoslbl) {
+    font-size:   11px;
+    font-weight: 400;
+    line-height: 1.6;
+    color:       #1e293b;
+    padding:     8px 10px;           /* padding interno: 8–12 px */
+  }
+
+  /* ── Pré-natal 3 colunas ──────────────────────────────── */
+  .p-pgrid {
+    display:      grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    border:       1px solid #1a3a5c;
+    border-radius: 5px;
+    margin-bottom: 16px;
+    break-inside:   avoid;
+    page-break-inside: avoid;
+  }
+  .p-pitem {
+    display:    flex;
+    align-items: flex-start;
+    gap:        7px;
+    font-size:  10px;
+    font-weight: 400;
+    line-height: 1.45;
+    margin-bottom: 4px;
+  }
+
+  /* ── USG / Testes rápidos ─────────────────────────────── */
+  .p-usgbloco,
+  .p-rapidos {
+    margin-bottom: 16px;
+    break-inside:   avoid;
+    page-break-inside: avoid;
+  }
+  .p-usgitem,
+  .p-rapido-item {
+    font-size:   10.5px;
+    font-weight: 400;
+    line-height: 1.5;
+    margin-bottom: 5px;
+  }
+
+  /* ── Orientações gestação ─────────────────────────────── */
+  .p-gestbox {
+    margin-bottom: 16px;
+    break-inside:   avoid;
+    page-break-inside: avoid;
+  }
+  .p-gestbody {
+    font-size:   11px;
+    font-weight: 400;
+    line-height: 1.6;
+    color:       #1e293b;
+    padding:     8px 10px;
+  }
+  .p-gestitem {
+    display:    flex;
+    align-items: flex-start;
+    gap:        8px;
+    margin-bottom: 5px;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* ── Corpo texto (declarações, receituário) ───────────── */
+  .p-corpo {
+    line-height:   1.75;
+    white-space:   pre-wrap;
+    font-size:     13px;
+    font-weight:   400;
+    font-family:   "Times New Roman", serif;
+    text-align:    justify;
+    margin-bottom: 16px;
+    color:         #000;
+  }
+
+  /* ── Receita C — blocos ───────────────────────────────── */
+  .p-bloco {
+    margin-bottom: 6px;
+    break-inside:   avoid;
+    page-break-inside: avoid;
+  }
+  .p-blocohd {
+    font-size:    7.5px;
+    font-weight:  700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding:      3px 7px;
+    line-height:  1.4;
+  }
+  .p-blocobody {
+    padding:     8px;                /* padding: 8–12 px */
+    line-height: 1.6;
+    font-size:   10.5px;
+    font-weight: 400;
+  }
+
+  /* ── Assinatura ───────────────────────────────────────── */
+  .assin-wrap {
+    border-top:  1px solid #e2e8f0;
+    padding-top: 12px;
+    margin-top:  14px;
+    display:     flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .assin-esq {
+    font-size:   9px;
+    font-weight: 400;
+    color:       #666;
+    line-height: 1.5;
+  }
+  .assin-dir { text-align: center; min-width: 210px; }
+  .assin-linha {
+    border-top:  1.5px solid #334155;
+    padding-top: 4px;
+    font-size:   11px;
+    font-weight: 700;
+    color:       #000;
+  }
+  .assin-crm {
+    font-size:   9.5px;
+    font-weight: 400;
+    color:       #555;
+    margin-top:  2px;
+  }
+
+  /* ── Faixa azul rodapé ─────────────────────────────────── */
+  .faixa-azul {
+    background:   #1a3a5c;
+    color:        #fff;
+    text-align:   center;
+    font-size:    7.5px;
+    font-weight:  600;
+    letter-spacing: .07em;
+    padding:      7px 0;
+    margin-top:   12px;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* ── 2 vias paisagem: container + colunas ─────────────── */
+  #paginas {
+    width:     297mm;
+    height:    210mm;
+    display:   flex;
+    flex-direction: row;
+    overflow:  hidden;
+  }
+  .via-col {
+    width:     148.5mm;
+    height:    210mm;
+    flex-shrink: 0;
+    display:   flex;
+    flex-direction: column;
+    padding:   7mm 10mm 0 10mm;
+    background: #fff;
+    overflow:  hidden;
+    box-sizing: border-box;
+  }
+  .via-divider {
+    width:    1px;
+    height:   210mm;
+    flex-shrink: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      #94a3b8 0, #94a3b8 4px,
+      transparent 4px, transparent 8px
+    );
+  }
+
+  /* ── Quadradinhos checkbox ─────────────────────────────── */
+  .cx-on {
+    display:      inline-block;
+    width:        11px;
+    height:       11px;
+    border:       1.5px solid #1a3a5c;
+    background:   #1a3a5c;
+    border-radius: 2px;
+    flex-shrink:  0;
+    margin-top:   1px;
+  }
+  .cx-off {
+    display:      inline-block;
+    width:        11px;
+    height:       11px;
+    border:       1.5px solid #bbb;
+    background:   #fff;
+    border-radius: 2px;
+    flex-shrink:  0;
+    margin-top:   1px;
+  }
+
+  /* ── Suprimir elementos de tela desnecessários ─────────── */
+  .app,
+  .painel,
+  .main-area,
+  .modal-bg,
+  nav,
+  button,
+  input,
+  select,
+  textarea {
+    display: none !important;
+  }
+}
